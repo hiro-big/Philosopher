@@ -9,7 +9,7 @@ public class Philosopher extends Process {
 		super(id, mq);
 		this.id = id;
 	}
-	
+
 	public void run () {
 		this.total = super.getMessageQueue().getTotalNum();
 
@@ -22,15 +22,15 @@ public class Philosopher extends Process {
 				send(count, new DefaultMessage(0, f)); // send it to a process with a certain id (count).
 				System.out.println("send to "+count);
 				send(((count-1)+total)%total, new DefaultMessage(0, f)); // send it to another process.
-				System.out.println("send to "+((count-1)+total)%total); 
+				System.out.println("send to "+((count-1)+total)%total);
 			}
 
 
 			try {
 				Thread.sleep(1000); // DO NOT REMOVE!!!
-			} catch (InterruptedException e) {		
-			} 
-			
+			} catch (InterruptedException e) {
+			}
+
 
 		}
 
@@ -48,16 +48,16 @@ public class Philosopher extends Process {
 			}
 			try {
 				Thread.sleep(1000); // DO NOT REMOVE!!!
-			} catch (InterruptedException e) {		
+			} catch (InterruptedException e) {
 			}
 		}
 
-		
+
 		for (int i = 0; i < 3; i++) {
 			right();
-			yield(); // release the CPU resource.
+			Thread.yield(); // release the CPU resource.
 			left();
-			yield(); // release the CPU resource.
+			Thread.yield(); // release the CPU resource.
 			eating();
 		}
 
@@ -78,28 +78,28 @@ public class Philosopher extends Process {
 			return null;
 		}
 	}
-	
+
 	/*
 	* Holding a Fork with a right hand.
 	*/
 	public void right() {
 
 	}
-	
+
 	/*
 	* Holding a Fork with a left hand.
-	*/	
+	*/
 	public void left() {
 
 	}
-	
+
 	/*
 	* Release Forks of both hands.
-	*/	
+	*/
 	public void release(){
 
 	}
-	
+
 	/*
 	* Eating a dish with two Forks.
 	*/
