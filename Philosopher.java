@@ -83,14 +83,25 @@ public class Philosopher extends Process {
 	* Holding a Fork with a right hand.
 	*/
 	public void right() {
-
+		Fork f;
+		boolean get = f.hold(id);
+		if(get){
+			System.out.println("Phil " +id ": holds right fork");
+		} else {
+			System.out.println("Phil " +id ": faild to get a fork");
+		}
 	}
 
 	/*
 	* Holding a Fork with a left hand.
 	*/
 	public void left() {
-
+		boolean get = f.hold(id);
+		if(get){
+			System.out.println("Phil " +id ": holds left fork");
+		} else {
+			System.out.println("Phil " +id ": faild to get a fork");
+		}
 	}
 
 	/*
