@@ -5,6 +5,9 @@ public class Philosopher extends Process {
 	int id = 0;
 	int total = 0;
 	Fork rFork, lFork;
+	boolean rgetflag = false;
+	boolean lgetflag = false;
+
 	public Philosopher(int id, MessageQueue mq) {
 		super(id, mq);
 		this.id = id;
@@ -52,16 +55,13 @@ public class Philosopher extends Process {
 			}
 		}
 
-
-		for (int i = 0; i < 3; i++) {
+		for(int i = 0;i<3;i++){
 			right();
 			Thread.yield(); // release the CPU resource.
 			left();
 			Thread.yield(); // release the CPU resource.
 			eating();
 		}
-
-		System.out.println("Phil "+id+": I'm full.");
 	}
 
 	/*
@@ -82,25 +82,39 @@ public class Philosopher extends Process {
 	/*
 	* Holding a Fork with a right hand.
 	*/
-	public void right() {
-		Fork f;
-		boolean get = f.hold(id);
-		if(get){
-			System.out.println("Phil " +id ": holds right fork");
+	public void right(){
+		rgetflag = this.rFork.hold(id);
+		if(rgetflag){
+			System.out.println("Phil " +id +": holds right fork");
 		} else {
-			System.out.println("Phil " +id ": faild to get a fork");
+			System.out.println("Phil " +id +": faild to get a fork");
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			right();
 		}
+
 	}
 
 	/*
 	* Holding a Fork with a left hand.
 	*/
 	public void left() {
-		boolean get = f.hold(id);
-		if(get){
-			System.out.println("Phil " +id ": holds left fork");
+		lgetflag = this.lFork.hold(id);
+		if(lgetflag){
+			System.out.println("Phil " +id +": holds left fork");
 		} else {
-			System.out.println("Phil " +id ": faild to get a fork");
+		 	System.out.println("Phil " +id +": faild to get a fork");
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			left();
 		}
 	}
 
@@ -108,20 +122,26 @@ public class Philosopher extends Process {
 	* Release Forks of both hands.
 	*/
 	public void release(){
-
+		rFork.drop(id);
+		lFork.drop(id);
+		rgetflag = false;
+		lgetflag = false;
 	}
 
 	/*
 	* Eating a dish with two Forks.
 	*/
 	public void eating() {
-		System.out.println("Phil "+id+": is eating...");
+		if(rgetflag && lgetflag) System.out.println("Phil "+id+": is eating...");
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		release();
+		if(rgetflag && lgetflag){
+			release();
+			System.out.println("Phil "+id+": I'm full.");
+		}
 	}
 }
